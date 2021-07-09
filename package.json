@@ -1,0 +1,19 @@
+{
+  "name": "speechtotexttgbot",
+  "version": "1.0.0",
+  "description": "",
+  "main": "app.js",
+  "scripts": {
+    "test": "nodemon app.js",
+    "start": "forever app.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/e-magon/SpeechToTextTGBot.git"
+  },
+  "author": "emagon",
+  "homepage": "https://github.com/e-magon/SpeechToTextTGBot#readme",
+  "dependencies": {
+    "node-telegram-bot-api": "^0.53.0"
+  }
+}
