@@ -1,0 +1,5 @@
+{
+"telegram_token": "token got from BotFather",
+"google_api_json": "googleKey/googleAccountKey.json",
+"google_storage_bucket": "name of the google storage bucket"
+}
