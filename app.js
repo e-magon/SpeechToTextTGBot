@@ -23,7 +23,8 @@ async function startBot() {
   // Create a bot that uses "polling" to fetch new updates
   const bot = new TelegramBot(tgToken, { polling: true });
 
-  console.log("\n\n")
+  console.log("\n")
+  logString("Avviato")
   bot.on("message", async (msg) => {
     const chatId = msg.chat.id;
 
@@ -32,7 +33,7 @@ async function startBot() {
     }
 
     if (msg.audio || msg.voice) {
-      console.log("received audio from user", msg.from.first_name, "(@" + msg.from.username + ")");
+      logString("received audio from user", msg.from.first_name, "(@" + msg.from.username + ")");
       const fileId = msg.audio ? msg.audio.file_id : msg.voice.file_id;
       bot.sendMessage(chatId, "Ricevuto audio, elaboro...");
       const fileName = await bot.downloadFile(fileId, "files");
@@ -69,7 +70,7 @@ async function transcribeAudioFile(originalFilePath) {
     const transcription = response.results
       .map(result => result.alternatives[0].transcript)
       .join("\n");
-    console.log(`\tTranscription: ${transcription}`);
+    logString(`\tTranscription: ${transcription}`);
 
     return transcription.length > 0 ? transcription : "Impossibile estrarre il parlato dall'audio";
   } finally {
@@ -78,7 +79,7 @@ async function transcribeAudioFile(originalFilePath) {
       fs.unlink(originalFilePath, () => { });
       fs.unlink(filePath, () => { });
     } catch (ex) {
-      console.error(ex);
+      logString(ex);
     }
 
     // deletes file from GStorage
@@ -100,7 +101,7 @@ async function deleteFileFromGStorage(filePath) {
   try {
     await storageClient.bucket(bucketName).file(fileName).delete();
   } catch (ex) {
-    console.error(ex);
+    logString(ex);
   }
 }
 
@@ -109,11 +110,11 @@ async function convertAudioFile(filePath) {
     const cmdString = `ffmpeg -i "${filePath}" -map 0:a:0 -c:a flac -ar 16k -ac 1 "${filePath}.flac"`;
     exec(cmdString, (error, stdout) => {
       if (error) {
-        console.log(`error: ${error.message}`);
+        logString(`error: ${error.message}`);
         reject(error);
         return;
       }
-      // console.log(`stdout: ${stdout}`);
+      // logString(`stdout: ${stdout}`);
       resolve(filePath + ".flac");
     });
   });
@@ -127,6 +128,13 @@ async function setupFolder() {
     });
   });
 
+}
+
+function logString(...msgs) {
+  let d = new Date();
+  let finalString = `${("" + d.getDate()).padStart(2, "0")}/${(d.getMonth() + 1 + "").padStart(2, "0")}/${d.getFullYear()} ${("" + d.getHours()).padStart(2, "0")}:${("" + d.getMinutes()).padStart(2, "0")}:${("" + d.getSeconds()).padStart(2, "0")} - ${msgs.join(" ")}`;
+
+  console.log(finalString);
 }
 
 startBot();

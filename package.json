@@ -13,6 +13,7 @@
   },
   "author": "emagon",
   "homepage": "https://github.com/e-magon/SpeechToTextTGBot#readme",
+  "license": "MIT",
   "dependencies": {
     "@google-cloud/speech": "^4.5.3",
     "@google-cloud/storage": "^5.8.5",
